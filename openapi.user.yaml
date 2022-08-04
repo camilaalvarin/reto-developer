@@ -1,0 +1,404 @@
+openapi: 3.0.3
+info:
+  title: Reto developer - Cambalache
+  description: Esta API permite crear nuevos usuarios, ver todos los usuarios, ver uno en particular, modificar los datos de los usuarios, borrar usuarios y buscar los repositorios y registros de login de cada usuario.
+  version: 1.0.11
+  servers:
+  - url: https://localhost:3000/users
+tags:
+  - name: usuarios
+    description: esta APi permite crear, modificar, eliminar y buscar usuarios
+paths:
+  /:
+    post:
+      tags:
+        - usuarios
+      summary: 
+      description: crea una nuevo usuario y lo guarda en la base de datos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usersPost'
+        required: true 
+      responses:
+        '200':
+          description: usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/exitoUsersPost'  
+        
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized' 
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+          
+    /:
+    get:
+      tags:
+        - usuarios
+      summary: 
+      description: busca y muestra a todos los clientes de la base de datos
+      responses:
+        '200':
+          description: usuario creado
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/getUsers'  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized' 
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'  
+       
+  /{userId}:
+    get:
+      tags:
+        - usuarios
+      summary: 
+      description: busca un cliente especifico por su userId
+      parameters: 
+      - userId: userId
+      description: identificador del cliente a obtener
+      required: true
+      schema:
+        type: interger
+      responses:
+        '200':
+          description: usuario creado
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/getUser'  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized' 
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'  
+  /{userId}:
+    put:
+      tags:
+        - usuarios
+      summary: 
+      description: busca un cliente especifico por su userId y modifica sus datos
+      parameters: 
+      - userId: userId
+      description: identificador del cliente a modificar
+      required: true
+      schema:
+        type: interger
+      responses:
+        '200':
+          description: usuario modificado
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/updateUser'  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized' 
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError' 
+  /{userId}:
+    delete:
+      tags:
+        - usuarios
+      summary: 
+      description: busca un cliente especifico por su userId y lo elimina
+      parameters: 
+      - userId: userId
+      description: identificador del cliente a eliminar
+      required: true
+      schema:
+        type: interger
+      responses:
+        '200':
+          description: usuario modificado
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/deleteUser'  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized' 
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError' 
+  /{userId}/repos:
+    get:
+      tags:
+        - usuarios
+      summary: 
+      description: busca los repositorios de un cliente especifico por su userId
+      parameters: 
+      - userId: userId
+      description: identificador del cliente a obtener
+      required: true
+      schema:
+        type: interger
+      responses:
+        '200':
+          description: repositorios encontrados
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/getUser'  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized' 
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'  
+          
+  /{userId}/login:
+    get:
+      tags:
+        - usuarios
+      summary: 
+      description: busca el historial de login de un cliente especifico por su userId
+      parameters: 
+      - userId: userId
+      description: identificador del cliente a obtener
+      required: true
+      schema:
+        type: interger
+      responses:
+        '200':
+          description: historial de login encontrado
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/getLogin'  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized' 
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+          
+# MIS SCHEMAS
+components:
+  responses:
+    Unauthorized:
+      description: (Unauthorized) No hay autorización para llamar al servicio
+    
+    NotFound:
+      description: (NotFound) No se encontró información
+    
+    BadRequest:
+      description: (Bad Request) Los datos enviados son incorrectos o hay datos obligatorios no enviados
+      
+    ServerError:
+      description: Error en servidor
+      
+  schemas:
+    usersPost:
+      type: object
+      properties: 
+        userIdentification:
+          type: integer
+          description: número de identificación del usuario
+          example: 1
+        name:
+          type: string
+          description: nombre del usuario
+          example: camila
+        email:
+          type: string
+          description: email del usuario
+          example: camila@gmail.com
+        birthDate:
+          type: date
+          format: date-time
+          description: dia de nacimiento del usuario
+          example: dafadfadfadf
+        favLanguage:
+          type: enum
+          description: lenguaje preferido del usuario
+          enum:
+            - javascript
+            - python
+        password:
+          type: string
+          description: contraseña del usuario
+          example: micontrseña
+    
+    exitoUsersPost:
+      type: object
+        properties: 
+          userIdentification:
+            type: integer
+            description: número de identificación del usuario
+          name:
+            type: string
+            description: nombre del usuario
+          email:
+            type: string
+            description: email del usuario
+          birthDate:
+            type: date
+            format: date-time
+            description: dia de nacimiento del usuario
+          favLanguage:
+            type: enum
+            description: lenguaje preferido del usuario
+            enum:
+              - javascript
+              - python
+          password:
+            type: string
+            description: contraseña del usuario
+            
+    getUsers:
+      type: object
+        properties: 
+          userIdentification:
+            type: integer
+            description: número de identificación del usuario
+            example: 1
+          name:
+            type: string
+            description: nombre del usuario
+            example: camila
+          email:
+            type: string
+            description: email del usuario
+            example: camila@gmail.com
+          birthDate:
+            type: date
+            format: date-time
+            description: dia de nacimiento del usuario
+            example: dafadfadfadf
+          favLanguage:
+            type: enum
+            description: lenguaje preferido del usuario
+            enum:
+              - javascript
+              - python
+          password:
+            type: string
+            description: contraseña del usuario
+            example: micontrseña
+            
+    getUser:
+      type: object
+      properties: 
+        userIdentification:
+          type: integer
+          description: número de identificación del usuario
+          example: 1
+        name:
+          type: string
+          description: nombre del usuario
+          example: camila
+        email:
+          type: string
+          description: email del usuario
+          example: camila@gmail.com
+        birthDate:
+          type: date
+          format: date-time
+          description: dia de nacimiento del usuario
+          example: dafadfadfadf
+        favLanguage:
+          type: enum
+          description: lenguaje preferido del usuario
+          enum:
+            - javascript
+            - python
+        password:
+          type: string
+          description: contraseña del usuario
+          example: micontrseña
+    updateUser:
+      type: object
+      properties: 
+        userIdentification:
+          type: integer
+          description: número de identificación del usuario
+          example: 1
+        name:
+          type: string
+          description: nombre del usuario
+          example: camila
+        email:
+          type: string
+          description: email del usuario
+          example: camila@gmail.com
+        birthDate:
+          type: date
+          format: date-time
+          description: dia de nacimiento del usuario
+          example: dafadfadfadf
+        favLanguage:
+          type: enum
+          description: lenguaje preferido del usuario
+          enum:
+            - javascript
+            - python
+        password:
+          type: string
+          description: contraseña del usuario
+          example: micontrseña
+          
+    userRepos:      
+      type: object
+        properties: 
+          userId:
+            type: integer
+            description: número de identificación del usuario
+          projectName:
+            type: string
+            description: nombre del repositorio
+          description:
+            type: string
+            description: descripcion del proyecto
+          creationDate:
+            type: date
+            format: date-time
+            description: dia de creación del repositorio
+          language:
+            type: enum
+            description: lenguaje preferido del usuario
+            enum:
+              - javascript
+              - python
+              
+    userLogin:      
+      type: objectproperties: 
+          password:
+            type: string
+            description: contraseña del usuario
+          userId:
+            type: interger
+            description: id del usuario
+          dateAndTime:
+            type: date
+            format: date-time
+            description: dia de creación del repositorio
+          type:
+            type: enum
+            enum:
+              - x
+              - y
